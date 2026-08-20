@@ -6,15 +6,13 @@ use App\Models\Concerns\HasCuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ModelCategories extends Model
+class Category extends Model
 {
-
     use HasCuid, SoftDeletes;
 
     protected $table = 'categories';
 
     protected $fillable = [
-        'id',
         'nama_kategori',
         'deskripsi',
     ];
