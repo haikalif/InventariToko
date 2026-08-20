@@ -2,16 +2,14 @@
 
 namespace App\Models;
 
-use App\Traits\HasCuid;
+use App\Models\Concerns\HasCuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ModelCategories extends Model
 {
 
-    use SoftDeletes;
-    use HasCuid;
-
+    use HasCuid, SoftDeletes;
 
     protected $table = 'categories';
 
