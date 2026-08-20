@@ -2,16 +2,17 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasCuid;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ModelProducts extends Model
 {
     protected $table = 'products';
 
-
+    use SoftDeletes, HasCuid;
 
     protected $fillable = [
-        'id',
         'nama_produk',
         'harga',
         'stok',
