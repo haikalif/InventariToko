@@ -12,18 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    public function register(registerRequest $request)
-    {
-
-        $user = User::create($request->validated());
-
-        return response()->json([
-            'message' => 'User registered successfully',
-            'user' => $user,
-        ], 201);
-    }
-
-    public function Login(LoginRequest $request)
+    public function login(LoginRequest $request)
     {
 
         $credentials = $request->only('email', 'password');
@@ -36,15 +25,33 @@ class AuthController extends Controller
 
         $user = Auth::user();
 
-        $expiration = $request->remember_me ? null : now()->addWeeks(1);
+        $expiration = $request->boolean('remember_me') ? null : now()->addWeeks(1);
 
-        $token = $user->createToken('auth_token' , ['*'], $expiration)->plainTextToken;
+        $token = $user->createToken('auth_token', ['*'], $expiration)->plainTextToken;
 
         return response()->json([
             'message' => 'Login successful',
             'access_token' => $token,
-            'user' => $user,
+            'user' => new \App\Http\Resources\AuthMeResource($user),
         ]);
+    }
 
+    public function logout()
+    {
+        Auth::user()->currentAccessToken()->delete();
+
+        return response()->json([
+            'message' => 'Logged out successfully',
+        ]);
+    }
+
+    public function me()
+    {
+        $user = Auth::user();
+
+        return response()->json([
+            'message' => 'Authenticated user retrieved successfully',
+            'user' => new \App\Http\Resources\AuthMeResource($user),
+        ]);
     }
 }
