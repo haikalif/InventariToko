@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\registerRequest;
+use App\Http\Resources\AuthMeResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -32,7 +33,7 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Login successful',
             'access_token' => $token,
-            'user' => new \App\Http\Resources\AuthMeResource($user),
+            'user' => new AuthMeResource($user),
         ]);
     }
 
@@ -51,7 +52,7 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Authenticated user retrieved successfully',
-            'user' => new \App\Http\Resources\AuthMeResource($user),
+            'user' => new AuthMeResource($user),
         ]);
     }
 }

@@ -19,7 +19,7 @@ class CategoryCollection extends ResourceCollection
         ];
     }
 
-     public function with(Request $request): array
+    public function with(Request $request): array
     {
         return [
             'meta' => [
@@ -28,6 +28,12 @@ class CategoryCollection extends ResourceCollection
                 'per_page' => $this->resource->perPage(),
                 'current_page' => $this->resource->currentPage(),
                 'total_pages' => $this->resource->lastPage(),
+            ],
+            'links' => [
+                'first' => $this->resource->url(1),
+                'last'  => $this->resource->url($this->resource->lastPage()),
+                'prev'  => $this->resource->previousPageUrl(),
+                'next'  => $this->resource->nextPageUrl(),
             ],
         ];
     }
