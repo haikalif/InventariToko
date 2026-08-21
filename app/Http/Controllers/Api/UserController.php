@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\registerRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -13,13 +14,16 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $users = User::all()->paginate(10);
+        return (new \App\Http\Resources\UserCollection($users))->additional([
+            'message' => 'User berhasil diambil',
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(registerRequest $request)
     {
         $user = User::create($request->validated());
 
@@ -34,15 +38,26 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        return response()->json([
+            'message' => 'User retrieved successfully',
+            'user' => new \App\Http\Resources\AuthMeResource($user),
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(registerRequest $request, string $id)
     {
-        //
+        $user = User::findOrFail($id);
+        $user->update($request->validated());
+
+        return response()->json([
+            'message' => 'User updated successfully',
+            'user' => new \App\Http\Resources\AuthMeResource($user),
+        ]);
     }
 
     /**
@@ -50,6 +65,42 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return response()->json([
+            'message' => 'User deleted successfully',
+        ]);
+    }
+
+    Public function forceDelete(string $id)
+    {
+        $user = User::withTrashed()->findOrFail($id);
+        $user->forceDelete();
+
+        return response()->json([
+            'message' => 'User permanently deleted successfully',
+        ]);
+    }
+
+    public function restore(string $id)
+    {
+        $user = User::withTrashed()->findOrFail($id);
+        $user->restore();
+
+        return response()->json([
+            'message' => 'User restored successfully',
+            'user' => new \App\Http\Resources\AuthMeResource($user),
+        ]);
+    }
+
+    public function trashed()
+    {
+        $trashedUsers = User::onlyTrashed()->get();
+
+        return response()->json([
+            'message' => 'Trashed users retrieved successfully',
+            'users' => \App\Http\Resources\AuthMeResource::collection($trashedUsers),
+        ]);
     }
 }
