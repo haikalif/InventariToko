@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CategoryRequest;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class CategoriesController extends Controller
@@ -12,15 +14,23 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        //
+        $category = Category::paginate(10);
+        return (new \App\Http\Resources\CategoryCollection($category))->additional([
+            'message' => 'category berhasil di tampilkan',
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        //
+        $category = Category::create($request->validated());
+        $response = [
+            'message' => 'category berhasil di buat',
+            'data' => new \App\Http\Resources\CategoryResource($category),
+        ];
+        return response()->json($response, 201);
     }
 
     /**
