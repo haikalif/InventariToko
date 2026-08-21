@@ -13,8 +13,15 @@ class registerRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Auth::user()?->role === 'admin'
-            || Auth::user()?->role === 'superadmin';
+        $currentUser = auth()->user();
+
+        if ($currentUser?->role === 'superadmin') return true;
+
+        if ($currentUser?->role === 'admin') {
+            return $this->input('role') !== 'superadmin';
+        }
+
+        return false;
     }
 
     /**

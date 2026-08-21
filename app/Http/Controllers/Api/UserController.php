@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\registerRequest;
+use App\Http\Requests\UpdateRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
+
 
 class UserController extends Controller
 {
@@ -14,7 +15,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all()->paginate(10);
+        $users = User::paginate(10);
         return (new \App\Http\Resources\UserCollection($users))->additional([
             'message' => 'User berhasil diambil',
         ]);
@@ -49,7 +50,7 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(registerRequest $request, string $id)
+    public function update(UpdateRequest $request, string $id)
     {
         $user = User::findOrFail($id);
         $user->update($request->validated());
@@ -73,7 +74,7 @@ class UserController extends Controller
         ]);
     }
 
-    Public function forceDelete(string $id)
+    public function forceDelete(string $id)
     {
         $user = User::withTrashed()->findOrFail($id);
         $user->forceDelete();
@@ -85,7 +86,7 @@ class UserController extends Controller
 
     public function restore(string $id)
     {
-        $user = User::withTrashed()->findOrFail($id);
+        $user = User::onlyTrashed()->findOrFail($id);
         $user->restore();
 
         return response()->json([
@@ -96,11 +97,10 @@ class UserController extends Controller
 
     public function trashed()
     {
-        $trashedUsers = User::onlyTrashed()->get();
+        $trashedUsers = User::onlyTrashed()->paginate(10);
 
-        return response()->json([
-            'message' => 'Trashed users retrieved successfully',
-            'users' => \App\Http\Resources\AuthMeResource::collection($trashedUsers),
+        return (new \App\Http\Resources\UserCollection($trashedUsers))->additional([
+            'message' => 'user yang di hapus berhasil diambil',
         ]);
     }
 }
