@@ -10,10 +10,10 @@ class ModelSalesItems extends Model
 {
     use HasCuid;
 
-    protected $table = 'sales_items';
+    protected $table = 'sale_items';
 
     protected $fillable = [
-        'sales_id',
+        'sale_id',
         'product_id',
         'jumlah',
     ];
@@ -25,13 +25,13 @@ class ModelSalesItems extends Model
         'updated_at' => 'datetime',
     ];
 
-    public function sales()
+    public function sale()
     {
-        return $this->belongsTo(ModelSales::class);
+        return $this->belongsTo(ModelSales::class, 'sale_id');
     }
 
     public function product()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class, 'product_id');
     }
 }
