@@ -28,7 +28,7 @@ class ModelSales extends Model
 
     public function salesItems()
     {
-        return $this->hasMany(ModelSalesItems::class);
+        return $this->hasMany(ModelSalesItems::class, 'sale_id');
     }
 
     public function user()
