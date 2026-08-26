@@ -19,7 +19,6 @@ class SaleRequest extends FormRequest
             'tanggal'           => 'required|date',
             'status'            => 'sometimes|string|in:pending,selesai,dibatalkan',
             'metode_pembayaran' => 'sometimes|nullable|string|max:255',
-            'total'             => 'sometimes|numeric|min:0',
         ];
     }
 
@@ -33,8 +32,6 @@ class SaleRequest extends FormRequest
             'tanggal.date'             => 'Tanggal harus berupa tanggal yang valid.',
             'status.in'                => 'Status harus salah satu dari: pending, selesai, dibatalkan.',
             'metode_pembayaran.max'    => 'Metode pembayaran maksimal 255 karakter.',
-            'total.numeric'            => 'Total harus berupa angka.',
-            'total.min'                => 'Total minimal 0.',
         ];
     }
 
