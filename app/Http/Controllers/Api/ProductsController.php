@@ -16,6 +16,7 @@ class ProductsController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Product::class);
         $product = Product::paginate(10);
         return (new ProductCollection($product))->additional([
             'message' => 'data produk berhasil di tampilkan'
@@ -27,6 +28,7 @@ class ProductsController extends Controller
      */
     public function store(ProductRequest $request)
     {
+        $this->authorize('create', Product::class);
         $product = Product::create($request->validated());
         return response()->json([
             'message' => 'data produk berhasil di tambahkan',
@@ -40,6 +42,7 @@ class ProductsController extends Controller
     public function show(string $id)
     {
         $product = Product::findOrFail($id);
+        $this->authorize('view', $product);
         return response()->json([
             'message' => 'Produk berhasil di tampilkan',
             'data' => new ProductResource($product),
@@ -52,6 +55,7 @@ class ProductsController extends Controller
     public function update(ProductRequest $request, string $id)
     {
         $product = Product::findOrFail($id);
+        $this->authorize('update', $product);
         $product->update($request->validated());
 
         return response()->json([
@@ -66,6 +70,7 @@ class ProductsController extends Controller
     public function destroy(string $id)
     {
         $product = Product::findOrFail($id);
+        $this->authorize('delete', $product);
         $product->delete();
 
         return response()->json([
@@ -76,6 +81,7 @@ class ProductsController extends Controller
     public function forceDelete(string $id)
     {
         $product = Product::withTrashed()->findOrFail($id);
+        $this->authorize('forceDelete', $product);
         $product->forceDelete();
 
         return response()->json([
@@ -86,6 +92,7 @@ class ProductsController extends Controller
     public function restore(string $id)
     {
         $product = Product::onlyTrashed()->findOrFail($id);
+        $this->authorize('restore', $product);
         $product->restore();
 
         return response()->json([
@@ -96,6 +103,7 @@ class ProductsController extends Controller
 
     public function trashed()
     {
+        $this->authorize('viewAny', Product::class);
         $trashedProduct = Product::onlyTrashed()->paginate(10);
 
         return (new ProductCollection($trashedProduct))->additional([

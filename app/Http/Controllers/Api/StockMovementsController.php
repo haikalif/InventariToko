@@ -13,6 +13,7 @@ class StockMovementsController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', ModelStockMovements::class);
         $stockMovement = ModelStockMovements::paginate(10);
         return (new StockMovementCollection($stockMovement))->additional([
             'message' => 'data berhasil di tampilkan'
@@ -26,6 +27,7 @@ class StockMovementsController extends Controller
     public function show(string $id)
     {
         $stockMovemnet = ModelStockMovements::findOrFail($id);
+        $this->authorize('view', $stockMovemnet);
         return response()->json([
             'message' => 'data yang di pilih berhasil di tampilkan'
         ]);
