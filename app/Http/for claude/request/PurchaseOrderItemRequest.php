@@ -16,16 +16,19 @@ class PurchaseOrderItemRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'purchase_order_id' => 'required|string|exists:purchase_orders,id',
             'product_id'        => 'required|string|exists:products,id',
             'jumlah'            => 'required|integer|min:1',
             'jumlah_diterima'   => 'sometimes|integer|min:0',
             'harga_satuan'      => 'required|numeric|min:0',
+            'subtotal'          => 'sometimes|numeric|min:0',
         ];
     }
 
     public function messages(): array
     {
         return [
+            'purchase_order_id.required' => 'Purchase order harus dipilih.',
             'purchase_order_id.exists'   => 'Purchase order tidak ditemukan.',
             'product_id.required'        => 'Produk harus dipilih.',
             'product_id.exists'          => 'Produk tidak ditemukan.',
@@ -37,6 +40,8 @@ class PurchaseOrderItemRequest extends FormRequest
             'harga_satuan.required'      => 'Harga satuan harus diisi.',
             'harga_satuan.numeric'       => 'Harga satuan harus berupa angka.',
             'harga_satuan.min'           => 'Harga satuan minimal 0.',
+            'subtotal.numeric'           => 'Subtotal harus berupa angka.',
+            'subtotal.min'               => 'Subtotal minimal 0.',
         ];
     }
 

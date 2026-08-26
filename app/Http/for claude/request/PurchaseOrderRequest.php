@@ -21,6 +21,7 @@ class PurchaseOrderRequest extends FormRequest
             'supplier_id' => 'required|string|exists:suppliers,id',
             'tanggal'     => 'required|date',
             'status'      => 'sometimes|string|in:draft,dipesan,diterima_sebagian,diterima,dibatalkan',
+            'total'       => 'sometimes|numeric|min:0',
             'catatan'     => 'sometimes|nullable|string',
         ];
     }
@@ -36,6 +37,8 @@ class PurchaseOrderRequest extends FormRequest
             'tanggal.required'  => 'Tanggal harus diisi.',
             'tanggal.date'      => 'Tanggal harus berupa tanggal yang valid.',
             'status.in'         => 'Status harus salah satu dari: draft, dipesan, diterima_sebagian, diterima, dibatalkan.',
+            'total.numeric'     => 'Total harus berupa angka.',
+            'total.min'         => 'Total minimal 0.',
             'catatan.string'    => 'Catatan harus berupa teks.',
         ];
     }
