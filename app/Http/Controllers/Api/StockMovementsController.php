@@ -28,7 +28,7 @@ class StockMovementsController extends Controller
         $stockMovemnet = ModelStockMovements::findOrFail($id);
         return response()->json([
             'message' => 'data yang di pilih berhasil di tampilkan'
-        ])
+        ]);
     }
 
 }
