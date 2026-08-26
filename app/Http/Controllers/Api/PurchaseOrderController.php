@@ -15,6 +15,7 @@ class PurchaseOrderController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize('viewAny', PurchaseOrder::class);
         $pos = PurchaseOrder::with(['supplier', 'user', 'items.product'])
             ->when($request->search, fn($q) =>
                 $q->where('nomor_po', 'like', "%{$request->search}%")
@@ -40,6 +41,7 @@ class PurchaseOrderController extends Controller
 
     public function store(PurchaseOrderRequest $request)
     {
+        $this->authorize('create', PurchaseOrder::class);
         $po = PurchaseOrder::create([
             ...$request->validated(),
             'user_id' => auth()->id(),
@@ -56,6 +58,7 @@ class PurchaseOrderController extends Controller
     {
         $po = PurchaseOrder::with(['supplier', 'user', 'items.product'])
             ->findOrFail($id);
+        $this->authorize('view', $po);
 
         return response()->json([
             'message' => 'Purchase order berhasil ditampilkan.',
@@ -66,6 +69,7 @@ class PurchaseOrderController extends Controller
     public function update(PurchaseOrderRequest $request, string $id)
     {
         $po = PurchaseOrder::with('items.product')->findOrFail($id);
+        $this->authorize('update', $po);
 
         if ($request->status === 'diterima' && $po->status !== 'diterima') {
             DB::transaction(function () use ($po) {
@@ -100,6 +104,7 @@ class PurchaseOrderController extends Controller
     public function destroy(string $id)
     {
         $po = PurchaseOrder::findOrFail($id);
+        $this->authorize('delete', $po);
 
         if ($po->status !== 'draft') {
             return response()->json([

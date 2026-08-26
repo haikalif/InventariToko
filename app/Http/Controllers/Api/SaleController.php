@@ -15,6 +15,7 @@ class SaleController extends Controller
 {
     public function index(Request $request)
     {
+        $this->authorize('viewAny', ModelSales::class);
         $sales = ModelSales::with(['user', 'salesItems.product'])
             ->when($request->search, fn($q) =>
                 $q->where('nomor_transaksi', 'like', "%{$request->search}%")
@@ -43,6 +44,7 @@ class SaleController extends Controller
 
     public function store(SaleRequest $request)
     {
+        $this->authorize('create', ModelSales::class);
         $sale = ModelSales::create([
             ...$request->validated(),
             'user_id' => auth()->id(),
@@ -58,6 +60,7 @@ class SaleController extends Controller
     public function show(string $id)
     {
         $sale = ModelSales::with(['user', 'salesItems.product'])->findOrFail($id);
+        $this->authorize('view', $sale);
 
         return response()->json([
             'message' => 'Transaksi berhasil ditampilkan.',
@@ -68,6 +71,7 @@ class SaleController extends Controller
     public function update(SaleRequest $request, string $id)
     {
         $sale = ModelSales::with('salesItems.product')->findOrFail($id);
+        $this->authorize('update', $sale);
 
         // Kalau dibatalkan, kembalikan stok
         if ($request->status === 'dibatalkan' && $sale->status !== 'dibatalkan') {
@@ -103,6 +107,7 @@ class SaleController extends Controller
     public function destroy(string $id)
     {
         $sale = ModelSales::findOrFail($id);
+        $this->authorize('delete', $sale);
 
         if ($sale->status !== 'pending') {
             return response()->json([

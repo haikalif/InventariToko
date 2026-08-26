@@ -15,17 +15,16 @@ class UserController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', User::class);
         $users = User::paginate(10);
         return (new \App\Http\Resources\UserCollection($users))->additional([
             'message' => 'User berhasil diambil',
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(registerRequest $request)
     {
+        $this->authorize('create', User::class);
         $user = User::create($request->validated());
 
         return response()->json([
@@ -34,12 +33,10 @@ class UserController extends Controller
         ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         $user = User::findOrFail($id);
+        $this->authorize('view', $user);
 
         return response()->json([
             'message' => 'User retrieved successfully',
@@ -47,12 +44,10 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateRequest $request, string $id)
     {
         $user = User::findOrFail($id);
+        $this->authorize('update', $user);
         $user->update($request->validated());
 
         return response()->json([
@@ -61,12 +56,10 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         $user = User::findOrFail($id);
+        $this->authorize('delete', $user);
         $user->delete();
 
         return response()->json([
@@ -77,6 +70,7 @@ class UserController extends Controller
     public function forceDelete(string $id)
     {
         $user = User::withTrashed()->findOrFail($id);
+        $this->authorize('forceDelete', $user);
         $user->forceDelete();
 
         return response()->json([
@@ -87,6 +81,7 @@ class UserController extends Controller
     public function restore(string $id)
     {
         $user = User::onlyTrashed()->findOrFail($id);
+        $this->authorize('restore', $user);
         $user->restore();
 
         return response()->json([
@@ -97,6 +92,7 @@ class UserController extends Controller
 
     public function trashed()
     {
+        $this->authorize('viewAny', User::class);
         $trashedUsers = User::onlyTrashed()->paginate(10);
 
         return (new \App\Http\Resources\UserCollection($trashedUsers))->additional([
