@@ -11,7 +11,8 @@ class ProductRequest extends FormRequest
     public function authorize(): bool
     {
         return Auth::user()?->role === 'admin'
-            || Auth::user()?->role === 'superadmin';
+            || Auth::user()?->role === 'superadmin'
+            || Auth::user()?->role === 'staff';
     }
 
     public function rules(): array

@@ -9,8 +9,7 @@ class SaleRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return Auth::user()?->role === 'admin'
-            || Auth::user()?->role === 'superadmin';
+        return true;
     }
 
     public function rules(): array
