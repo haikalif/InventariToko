@@ -50,6 +50,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/supliers', SupliersController::class);
 
     // Products
+    Route::get('/products/trashed', [ProductsController::class, 'trashed']);
+    Route::post('/products/{id}/restore', [ProductsController::class, 'restore']);
+    Route::delete('/products/{id}/force-delete', [ProductsController::class, 'forceDelete']);
     Route::apiResource('/products', ProductsController::class);
 
     // Stock Movements (read only)
