@@ -15,6 +15,8 @@ class ModelPurchaseOrdersItems extends Model
         'purchase_order_id',
         'product_id',
         'jumlah',
+        'harga_satuan',
+        'subtotal',
         'jumlah_diterima',
     ];
 

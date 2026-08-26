@@ -17,6 +17,7 @@ class ModelSales extends Model
         'user_id',
         'status',
         'metode_pembayaran',
+        'total',
     ];
 
     protected $casts = [

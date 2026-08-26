@@ -16,6 +16,8 @@ class ModelSalesItems extends Model
         'sale_id',
         'product_id',
         'jumlah',
+        'harga_satuan',
+        'subtotal',
     ];
 
     protected $casts = [

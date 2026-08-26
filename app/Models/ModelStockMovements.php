@@ -14,6 +14,9 @@ class ModelStockMovements extends Model
     protected $fillable = [
         'product_id',
         'tipe',
+        'jumlah',
+        'stok_sebelum',
+        'stok_sesudah',
         'referensi',
         'user_id',
         'jenis',
