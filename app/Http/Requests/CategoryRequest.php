@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryRequest extends FormRequest
 {
@@ -12,7 +13,8 @@ class CategoryRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return Auth::user()?->role === 'admin'
+            || Auth::user()?->role === 'superadmin';
     }
 
     /**
@@ -23,25 +25,25 @@ class CategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'nama_kategori' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'name.required' => 'Nama kategori wajib diisi.',
-            'name.string' => 'Nama kategori harus berupa string.',
-            'name.max' => 'Nama kategori tidak boleh lebih dari 255 karakter.',
-            'description.string' => 'Deskripsi kategori harus berupa string.',
+            'nama_kategori.required' => 'Nama kategori wajib diisi.',
+            'nama_kategori.string' => 'Nama kategori harus berupa string.',
+            'nama_kategori.max' => 'Nama kategori tidak boleh lebih dari 255 karakter.',
+            'deskripsi.string' => 'Deskripsi kategori harus berupa string.',
         ];
     }
 
     public function prepareForValidation(): void
     {
         $this->merge([
-            'name' => trim($this->name),
+            'nama_kategori' => trim($this->name),
         ]);
     }
 }
