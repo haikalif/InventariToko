@@ -16,17 +16,16 @@ class CategoriesController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Category::class);
         $category = Category::paginate(10);
         return (new CategoryCollection($category))->additional([
             'message' => 'category berhasil di tampilkan',
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(CategoryRequest $request)
     {
+        $this->authorize('create', Category::class);
         $category = Category::create($request->validated());
         $response = [
             'message' => 'category berhasil di buat',
@@ -35,24 +34,20 @@ class CategoriesController extends Controller
         return response()->json($response, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         $category = Category::findOrFail($id);
+        $this->authorize('view', $category);
         return response()->json([
             'message' => 'category berhasil di tampilkan',
             'data' => new CategoryResource($category),
         ], 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(CategoryRequest $request, string $id)
     {
         $category = Category::findOrFail($id);
+        $this->authorize('update', $category);
         $category->update($request->validated());
 
         return response()->json([
@@ -61,12 +56,10 @@ class CategoriesController extends Controller
         ], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         $category = Category::findOrFail($id);
+        $this->authorize('delete', $category);
         $category->delete();
 
         return response()->json([
@@ -77,6 +70,7 @@ class CategoriesController extends Controller
     public function forceDelete(string $id)
     {
         $category = Category::withTrashed()->findOrFail($id);
+        $this->authorize('forceDelete', $category);
         $category->forceDelete();
 
         return response()->json([
@@ -87,6 +81,7 @@ class CategoriesController extends Controller
     public function restore(string $id)
     {
         $category = Category::onlyTrashed()->findOrFail($id);
+        $this->authorize('restore', $category);
         $category->restore();
 
         return response()->json([
@@ -97,6 +92,7 @@ class CategoriesController extends Controller
 
     public function trashed()
     {
+        $this->authorize('viewAny', Category::class);
         $trashedCategory = Category::onlyTrashed()->paginate(10);
 
         return (new CategoryCollection($trashedCategory))->additional([

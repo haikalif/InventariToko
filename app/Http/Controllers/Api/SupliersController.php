@@ -15,17 +15,16 @@ class SupliersController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', ModelSupliers::class);
         $suplier = ModelSupliers::paginate(10);
         return (new SupliersCollection($suplier))->additional([
             'message' => 'data supliers berhasil di ambil'
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(SupplierRequest $request)
     {
+        $this->authorize('create', ModelSupliers::class);
         $suplier = ModelSupliers::create($request->validated());
         return response()->json([
             'message' => 'data suplier berhasil di tambahkan',
@@ -33,24 +32,20 @@ class SupliersController extends Controller
         ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         $suplier = ModelSupliers::findOrFail($id);
+        $this->authorize('view', $suplier);
         return response()->json([
             'message' => 'data suplier yang di minta berhasil di tampilkan',
             'data' => new SupliersResource($suplier)
         ], 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(SupplierRequest $request, string $id)
     {
         $suplier = ModelSupliers::findOrFail($id);
+        $this->authorize('update', $suplier);
         $suplier->update($request->validated());
         return response()->json([
             'message' => 'data suplier berhasil di update',
@@ -58,12 +53,10 @@ class SupliersController extends Controller
         ], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         $suplier = ModelSupliers::findOrFail($id);
+        $this->authorize('delete', $suplier);
         $suplier->delete();
         return response()->json([
             'message' => 'data berhasil di hapus'
@@ -73,6 +66,7 @@ class SupliersController extends Controller
     public function forceDelete(string $id)
     {
         $suplier = ModelSupliers::withTrashed()->findOrFail($id);
+        $this->authorize('forceDelete', $suplier);
         $suplier->forceDelete();
 
         return response()->json([
@@ -83,6 +77,7 @@ class SupliersController extends Controller
     public function restore(string $id)
     {
         $suplier = ModelSupliers::onlyTrashed()->findOrFail($id);
+        $this->authorize('restore', $suplier);
         $suplier->restore();
 
         return response()->json([
@@ -93,6 +88,7 @@ class SupliersController extends Controller
 
     public function trashed()
     {
+        $this->authorize('viewAny', ModelSupliers::class);
         $trashedSuplier = ModelSupliers::onlyTrashed()->paginate(10);
 
         return (new SupliersCollection($trashedSuplier))->additional([
