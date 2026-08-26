@@ -43,7 +43,7 @@ class CategoryRequest extends FormRequest
     public function prepareForValidation(): void
     {
         $this->merge([
-            'nama_kategori' => trim($this->name),
+            'nama_kategori' => trim($this->nama_kategori),
         ]);
     }
 }
