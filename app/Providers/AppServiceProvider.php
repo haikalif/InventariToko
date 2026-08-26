@@ -18,6 +18,10 @@ use App\Models\ModelSupliers;
 use App\Policies\SuplierPolicy;
 use App\Models\User;
 use App\Policies\UserPolicy;
+use App\Models\ModelSalesItems;
+use App\Policies\SaleItemPolicy;
+use App\Models\ModelPurchaseOrdersItems;
+use App\Policies\PurchaseOrderItemPolicy;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -41,5 +45,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Category::class, CategoryPolicy::class);
         Gate::policy(ModelSupliers::class, SuplierPolicy::class);
         Gate::policy(User::class, UserPolicy::class);
+        Gate::policy(ModelSalesItems::class, SaleItemPolicy::class);
+        Gate::policy(ModelPurchaseOrdersItems::class, PurchaseOrderItemPolicy::class);
     }
 }
+

@@ -12,6 +12,7 @@ class PurchaseOrderItemController extends Controller
 {
     public function index(string $poId)
     {
+        $this->authorize('viewAny', ModelPurchaseOrdersItems::class);
         $po = PurchaseOrder::findOrFail($poId);
 
         return response()->json([
@@ -24,6 +25,7 @@ class PurchaseOrderItemController extends Controller
 
     public function store(PurchaseOrderItemRequest $request, string $poId)
     {
+        $this->authorize('create', ModelPurchaseOrdersItems::class);
         $po = PurchaseOrder::findOrFail($poId);
 
         if ($po->status !== 'draft') {
@@ -53,6 +55,7 @@ class PurchaseOrderItemController extends Controller
     {
         $po   = PurchaseOrder::findOrFail($poId);
         $item = ModelPurchaseOrdersItems::where('purchase_order_id', $poId)->findOrFail($itemId);
+        $this->authorize('update', $item);
 
         if ($po->status !== 'draft') {
             return response()->json([
@@ -80,6 +83,7 @@ class PurchaseOrderItemController extends Controller
     {
         $po   = PurchaseOrder::findOrFail($poId);
         $item = ModelPurchaseOrdersItems::where('purchase_order_id', $poId)->findOrFail($itemId);
+        $this->authorize('delete', $item);
 
         if ($po->status !== 'draft') {
             return response()->json([

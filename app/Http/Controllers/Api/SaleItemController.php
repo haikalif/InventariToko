@@ -15,6 +15,7 @@ class SaleItemController extends Controller
 {
     public function index(string $saleId)
     {
+        $this->authorize('viewAny', ModelSalesItems::class);
         $sale = ModelSales::findOrFail($saleId);
 
         return response()->json([
@@ -27,6 +28,7 @@ class SaleItemController extends Controller
 
     public function store(SaleItemRequest $request, string $saleId)
     {
+        $this->authorize('create', ModelSalesItems::class);
         $sale    = ModelSales::findOrFail($saleId);
         $product = Product::findOrFail($request->product_id);
 
@@ -78,6 +80,7 @@ class SaleItemController extends Controller
     {
         $sale = ModelSales::findOrFail($saleId);
         $item = ModelSalesItems::where('sale_id', $saleId)->findOrFail($itemId);
+        $this->authorize('delete', $item);
 
         if ($sale->status !== 'pending') {
             return response()->json([
