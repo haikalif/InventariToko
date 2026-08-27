@@ -13,8 +13,15 @@ class registerRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // Siapapun boleh mendaftar
-        return true;
+        $currentUser = auth()->user();
+
+        if ($currentUser?->role === 'superadmin') return true;
+
+        if ($currentUser?->role === 'admin') {
+            return $this->input('role') !== 'superadmin';
+        }
+
+        return false;
     }
 
     /**
@@ -28,6 +35,7 @@ class registerRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'role' => 'required|string|in:admin,kasir,staff',
         ];
     }
 
@@ -41,6 +49,8 @@ class registerRequest extends FormRequest
             'password.required' => 'Password harus diisi.',
             'password.min' => 'Password minimal 8 karakter.',
             'password.confirmed' => 'Konfirmasi password tidak sesuai.',
+            'role.required' => 'Role harus diisi.',
+            'role.in' => 'Role harus salah satu dari: admin, kasir, staff.',
         ];
     }
 
@@ -53,7 +63,9 @@ class registerRequest extends FormRequest
         }
 
         $this->merge([
+
             'email' => trim($this->email),
+            'role' => trim($this->role),
         ]);
     }
 }
