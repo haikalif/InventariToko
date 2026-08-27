@@ -24,7 +24,6 @@ class UserController extends Controller
 
     public function store(registerRequest $request)
     {
-        $this->authorize('create', User::class);
         $user = User::create($request->validated());
 
         return response()->json([

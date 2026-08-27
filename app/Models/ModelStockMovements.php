@@ -19,7 +19,6 @@ class ModelStockMovements extends Model
         'stok_sesudah',
         'referensi',
         'user_id',
-        'jenis',
         'keterangan',
     ];
 

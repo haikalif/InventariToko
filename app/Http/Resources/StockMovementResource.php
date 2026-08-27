@@ -23,7 +23,6 @@ class StockMovementResource extends JsonResource
             'stok_sesudah'  => $this->stok_sesudah,
             'referensi'     => $this->referensi,
             'user_id'       => $this->user_id,
-            'jenis'         => $this->jenis,
             'keterangan'    => $this->keterangan,
             'created_at'    => optional($this->created_at)->toDateTimeString(),
             'updated_at'    => optional($this->updated_at)->toDateTimeString(),
