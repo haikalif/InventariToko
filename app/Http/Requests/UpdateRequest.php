@@ -13,7 +13,7 @@ class UpdateRequest extends FormRequest
     public function authorize(): bool
     {
         $currentUser = auth()->user();
-        $targetUser = \App\Models\User::findOrFail($this->route('user'));
+        $targetUser = \App\Models\User::findOrFail($this->route('id'));
 
 
         if ($currentUser->role === 'superadmin') return true;
@@ -32,7 +32,7 @@ class UpdateRequest extends FormRequest
     {
         return [
             'name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|string|email|max:255|unique:users,email,' . $this->route('user'),
+            'email' => 'sometimes|string|email|max:255|unique:users,email,' . $this->route('id'),
             'password' => 'sometimes|string|min:8|confirmed',
             'role' => 'sometimes|string|in:admin,kasir,staff',
         ];
