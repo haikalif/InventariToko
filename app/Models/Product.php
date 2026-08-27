@@ -49,7 +49,7 @@ class Product extends Model
 
     public function supplier()
     {
-        return $this->belongsTo(ModelSupliers::class);
+        return $this->belongsTo(ModelSupliers::class, 'supplier_id');
     }
 
     public function stockMovements()

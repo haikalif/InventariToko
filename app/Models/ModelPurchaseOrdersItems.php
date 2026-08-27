@@ -9,7 +9,7 @@ class ModelPurchaseOrdersItems extends Model
 {
 
     use HasCuid;
-    Protected $table = 'purchase_orders_items';
+    protected $table = 'purchase_order_items';
 
     protected $fillable = [
         'purchase_order_id',

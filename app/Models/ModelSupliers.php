@@ -10,10 +10,10 @@ class ModelSupliers extends Model
 {
 
     use HasCuid, SoftDeletes;
-    protected $table = 'supliers';
+    protected $table = 'suppliers';
 
     protected $fillable = [
-        'nama_suplier',
+        'nama_supplier',
         'kontak',
         'email',
         'alamat',
