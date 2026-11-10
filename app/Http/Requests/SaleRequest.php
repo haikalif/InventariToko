@@ -14,9 +14,12 @@ class SaleRequest extends FormRequest
 
     public function rules(): array
     {
+        $saleId = $this->route('sale') ?? $this->route('id');
+        $required = $this->isMethod('POST') ? 'required' : 'sometimes|required';
+
         return [
-            'nomor_transaksi'   => 'required|string|max:25|unique:sales,nomor_transaksi,' . $this->route('id'),
-            'tanggal'           => 'required|date',
+            'nomor_transaksi'   => $required . '|string|max:25|unique:sales,nomor_transaksi,' . $saleId,
+            'tanggal'           => $required . '|date',
             'status'            => 'sometimes|string|in:pending,selesai,dibatalkan',
             'metode_pembayaran' => 'sometimes|nullable|string|max:255',
         ];
@@ -37,9 +40,14 @@ class SaleRequest extends FormRequest
 
     public function prepareForValidation(): void
     {
-        $this->merge([
-            'nomor_transaksi'   => trim($this->nomor_transaksi ?? ''),
-            'metode_pembayaran' => trim($this->metode_pembayaran ?? ''),
-        ]);
+        $merged = [];
+        foreach (['nomor_transaksi', 'metode_pembayaran'] as $field) {
+            if ($this->has($field) && is_string($this->$field)) {
+                $merged[$field] = trim($this->$field);
+            }
+        }
+        if (!empty($merged)) {
+            $this->merge($merged);
+        }
     }
 }

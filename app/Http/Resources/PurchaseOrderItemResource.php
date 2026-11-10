@@ -22,6 +22,7 @@ class PurchaseOrderItemResource extends JsonResource
             'jumlah_diterima' => $this->jumlah_diterima,
             'harga_satuan' => $this->harga_satuan,
             'subtotal' => $this->subtotal,
+            'product' => new ProductResource($this->whenLoaded('product')),
             'created_at' => optional($this->created_at)->toDateTimeString(),
             'updated_at' => optional($this->updated_at)->toDateTimeString(),
         ];

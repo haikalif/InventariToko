@@ -44,16 +44,16 @@ class Product extends Model
 
     public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
     public function supplier()
     {
-        return $this->belongsTo(ModelSupliers::class);
+        return $this->belongsTo(ModelSupliers::class, 'supplier_id');
     }
 
     public function stockMovements()
     {
-        return $this->hasMany(ModelStockMovements::class);
+        return $this->hasMany(ModelStockMovements::class, 'product_id');
     }
 }

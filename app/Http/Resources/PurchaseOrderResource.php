@@ -23,6 +23,9 @@ class PurchaseOrderResource extends JsonResource
             'total' => $this->total,
             'catatan' => $this->catatan,
             'user_id' => $this->user_id,
+            'supplier' => new SupliersResource($this->whenLoaded('supplier')),
+            'user' => new UserResource($this->whenLoaded('user')),
+            'items' => PurchaseOrderItemResource::collection($this->whenLoaded('items')),
             'created_at' => optional($this->created_at)->toDateTimeString(),
             'updated_at' => optional($this->updated_at)->toDateTimeString(),
         ];

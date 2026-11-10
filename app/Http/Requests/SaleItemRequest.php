@@ -38,9 +38,14 @@ class SaleItemRequest extends FormRequest
 
     public function prepareForValidation(): void
     {
-        $this->merge([
-            'sale_id'    => trim($this->sale_id ?? ''),
-            'product_id' => trim($this->product_id ?? ''),
-        ]);
+        $merged = [];
+        foreach (['sale_id', 'product_id'] as $field) {
+            if ($this->has($field) && is_string($this->$field)) {
+                $merged[$field] = trim($this->$field);
+            }
+        }
+        if (!empty($merged)) {
+            $this->merge($merged);
+        }
     }
 }

@@ -30,16 +30,16 @@ class PurchaseOrder extends Model
 
     public function supplier()
     {
-        return $this->belongsTo(ModelSupliers::class);
+        return $this->belongsTo(ModelSupliers::class, 'supplier_id');
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function items()
     {
-        return $this->hasMany(ModelPurchaseOrdersItems::class);
+        return $this->hasMany(ModelPurchaseOrdersItems::class, 'purchase_order_id');
     }
 }

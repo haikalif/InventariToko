@@ -74,13 +74,18 @@ class PurchaseOrderController extends Controller
         if ($request->status === 'diterima' && $po->status !== 'diterima') {
             DB::transaction(function () use ($po) {
                 foreach ($po->items as $item) {
-                    $product  = $item->product;
-                    $stokBaru = $product->stok + $item->jumlah;
+                    $product      = $item->product;
+                    $jumlahMasuk  = $item->jumlah_diterima > 0 ? $item->jumlah_diterima : $item->jumlah;
+                    $stokBaru     = $product->stok + $jumlahMasuk;
+
+                    if ($item->jumlah_diterima === 0) {
+                        $item->update(['jumlah_diterima' => $jumlahMasuk]);
+                    }
 
                     ModelStockMovements::create([
                         'product_id'   => $product->id,
                         'tipe'         => 'masuk',
-                        'jumlah'       => $item->jumlah,
+                        'jumlah'       => $jumlahMasuk,
                         'stok_sebelum' => $product->stok,
                         'stok_sesudah' => $stokBaru,
                         'referensi'    => $po->nomor_po,

@@ -10,17 +10,19 @@ class SupplierRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return Auth::user()?->role === 'admin'
-            || Auth::user()?->role === 'superadmin';
+        return in_array(Auth::user()?->role, ['superadmin', 'admin', 'staff']);
     }
 
     public function rules(): array
     {
+        $supplierId = $this->route('suplier') ?? $this->route('id');
+        $required = $this->isMethod('POST') ? 'required' : 'sometimes|required';
+
         return [
-            'nama_supplier' => 'required|string|max:255',
-            'kontak'        => 'sometimes|string|max:50',
-            'email'         => 'sometimes|email|max:255|unique:suppliers,email,' . $this->route('id'),
-            'alamat'        => 'sometimes|string',
+            'nama_supplier' => $required . '|string|max:255',
+            'kontak'        => 'sometimes|nullable|string|max:50',
+            'email'         => 'sometimes|nullable|email|max:255|unique:suppliers,email,' . $supplierId,
+            'alamat'        => 'sometimes|nullable|string',
         ];
     }
 
@@ -38,10 +40,14 @@ class SupplierRequest extends FormRequest
 
     public function prepareForValidation(): void
     {
-        $this->merge([
-            'nama_supplier' => trim($this->nama_supplier),
-            'email'         => trim($this->email),
-            'kontak'        => trim($this->kontak),
-        ]);
+        $merged = [];
+        foreach (['nama_supplier', 'email', 'kontak'] as $field) {
+            if ($this->has($field) && is_string($this->$field)) {
+                $merged[$field] = trim($this->$field);
+            }
+        }
+        if (!empty($merged)) {
+            $this->merge($merged);
+        }
     }
 }

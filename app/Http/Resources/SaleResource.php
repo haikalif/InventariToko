@@ -22,6 +22,8 @@ class SaleResource extends JsonResource
             'status' => $this->status,
             'metode_pembayaran' => $this->metode_pembayaran,
             'user_id' => $this->user_id,
+            'user' => new UserResource($this->whenLoaded('user')),
+            'items' => SaleItemResource::collection($this->whenLoaded('salesItems')),
             'created_at' => optional($this->created_at)->toDateTimeString(),
             'updated_at' => optional($this->updated_at)->toDateTimeString(),
         ];

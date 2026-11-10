@@ -17,15 +17,19 @@ class ProductRequest extends FormRequest
 
     public function rules(): array
     {
+        $productId = $this->route('product') ?? $this->route('id');
+        $required = $this->isMethod('POST') ? 'required' : 'sometimes|required';
+
         return [
-            'sku'          => 'required|string|max:255|unique:products,sku,' . $this->route('id'),
-            'nama_produk'  => 'required|string|max:255',
+            'sku'          => $required . '|string|max:255|unique:products,sku,' . $productId,
+            'nama_produk'  => $required . '|string|max:255',
             'category_id'  => 'sometimes|nullable|exists:categories,id',
             'supplier_id'  => 'sometimes|nullable|exists:suppliers,id',
             'deskripsi'    => 'sometimes|nullable|string',
             'satuan'       => 'sometimes|string|max:50',
             'harga_beli'   => 'sometimes|numeric|min:0',
             'harga_jual'   => 'sometimes|numeric|min:0',
+            'stok'         => 'sometimes|integer|min:0',
             'stok_minimum' => 'sometimes|integer|min:0',
             'barcode'      => 'sometimes|nullable|string|max:255',
             'gambar'       => 'sometimes|nullable|string|max:255',
@@ -49,6 +53,8 @@ class ProductRequest extends FormRequest
             'harga_beli.min'        => 'Harga beli minimal 0.',
             'harga_jual.numeric'    => 'Harga jual harus berupa angka.',
             'harga_jual.min'        => 'Harga jual minimal 0.',
+            'stok.integer'          => 'Stok harus berupa bilangan bulat.',
+            'stok.min'              => 'Stok minimal 0.',
             'stok_minimum.integer'  => 'Stok minimum harus berupa bilangan bulat.',
             'stok_minimum.min'      => 'Stok minimum minimal 0.',
             'barcode.max'           => 'Barcode maksimal 255 karakter.',
@@ -59,11 +65,14 @@ class ProductRequest extends FormRequest
 
     public function prepareForValidation(): void
     {
-        $this->merge([
-            'sku'         => trim($this->sku),
-            'nama_produk' => trim($this->nama_produk),
-            'satuan'      => trim($this->satuan),
-            'barcode'     => trim($this->barcode),
-        ]);
+        $merged = [];
+        foreach (['sku', 'nama_produk', 'satuan', 'barcode'] as $field) {
+            if ($this->has($field) && is_string($this->$field)) {
+                $merged[$field] = trim($this->$field);
+            }
+        }
+        if (!empty($merged)) {
+            $this->merge($merged);
+        }
     }
 }

@@ -10,10 +10,10 @@ class ModelSupliers extends Model
 {
 
     use HasCuid, SoftDeletes;
-    protected $table = 'supliers';
+    protected $table = 'suppliers';
 
     protected $fillable = [
-        'nama_suplier',
+        'nama_supplier',
         'kontak',
         'email',
         'alamat',
@@ -30,11 +30,11 @@ class ModelSupliers extends Model
 
     public function products()
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(Product::class, 'supplier_id');
     }
 
     public function purchaseOrders()
     {
-        return $this->hasMany(PurchaseOrder::class);
+        return $this->hasMany(PurchaseOrder::class, 'supplier_id');
     }
 }

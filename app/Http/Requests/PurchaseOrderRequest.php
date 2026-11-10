@@ -16,10 +16,13 @@ class PurchaseOrderRequest extends FormRequest
 
     public function rules(): array
     {
+        $poId = $this->route('purchase_order') ?? $this->route('id');
+        $required = $this->isMethod('POST') ? 'required' : 'sometimes|required';
+
         return [
-            'nomor_po'    => 'required|string|max:25|unique:purchase_orders,nomor_po,' . $this->route('id'),
-            'supplier_id' => 'required|string|exists:suppliers,id',
-            'tanggal'     => 'required|date',
+            'nomor_po'    => $required . '|string|max:25|unique:purchase_orders,nomor_po,' . $poId,
+            'supplier_id' => $required . '|string|exists:suppliers,id',
+            'tanggal'     => $required . '|date',
             'status'      => 'sometimes|string|in:draft,dipesan,diterima_sebagian,diterima,dibatalkan',
             'catatan'     => 'sometimes|nullable|string',
         ];
@@ -42,9 +45,14 @@ class PurchaseOrderRequest extends FormRequest
 
     public function prepareForValidation(): void
     {
-        $this->merge([
-            'nomor_po' => trim($this->nomor_po ?? ''),
-            'catatan'  => trim($this->catatan ?? ''),
-        ]);
+        $merged = [];
+        foreach (['nomor_po', 'catatan'] as $field) {
+            if ($this->has($field) && is_string($this->$field)) {
+                $merged[$field] = trim($this->$field);
+            }
+        }
+        if (!empty($merged)) {
+            $this->merge($merged);
+        }
     }
 }

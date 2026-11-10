@@ -57,14 +57,16 @@ class PurchaseOrderItemController extends Controller
         $item = ModelPurchaseOrdersItems::where('purchase_order_id', $poId)->findOrFail($itemId);
         $this->authorize('update', $item);
 
-        if ($po->status !== 'draft') {
+        if (in_array($po->status, ['diterima', 'dibatalkan'])) {
             return response()->json([
-                'message' => 'Item hanya bisa diubah jika PO masih berstatus draft.',
+                'message' => 'Item tidak bisa diubah jika PO sudah diterima atau dibatalkan.',
             ], 422);
         }
 
-        $validated = $request->validated();
-        $subtotal  = $validated['jumlah'] * $validated['harga_satuan'];
+        $validated   = $request->validated();
+        $jumlah      = $validated['jumlah'] ?? $item->jumlah;
+        $hargaSatuan = $validated['harga_satuan'] ?? $item->harga_satuan;
+        $subtotal    = $jumlah * $hargaSatuan;
 
         $item->update([
             ...$validated,

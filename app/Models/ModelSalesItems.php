@@ -21,6 +21,7 @@ class ModelSalesItems extends Model
     ];
 
     protected $casts = [
+        'jumlah' => 'integer',
         'harga_satuan' => 'decimal:2',
         'subtotal' => 'decimal:2',
         'created_at' => 'datetime',

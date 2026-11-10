@@ -81,7 +81,7 @@ class SupliersController extends Controller
         $suplier->restore();
 
         return response()->json([
-            'message' => 'category restored successfully',
+            'message' => 'data suplier berhasil di pulihkan',
             'data' => new SupliersResource($suplier),
         ], 200);
     }

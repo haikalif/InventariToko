@@ -9,17 +9,18 @@ class PurchaseOrderItemRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return Auth::user()?->role === 'admin'
-            || Auth::user()?->role === 'superadmin';
+        return in_array(Auth::user()?->role, ['superadmin', 'admin', 'staff']);
     }
 
     public function rules(): array
     {
+        $required = $this->isMethod('POST') ? 'required' : 'sometimes|required';
+
         return [
-            'product_id'        => 'required|string|exists:products,id',
-            'jumlah'            => 'required|integer|min:1',
+            'product_id'        => $required . '|string|exists:products,id',
+            'jumlah'            => $required . '|integer|min:1',
             'jumlah_diterima'   => 'sometimes|integer|min:0',
-            'harga_satuan'      => 'required|numeric|min:0',
+            'harga_satuan'      => $required . '|numeric|min:0',
         ];
     }
 
@@ -42,9 +43,14 @@ class PurchaseOrderItemRequest extends FormRequest
 
     public function prepareForValidation(): void
     {
-        $this->merge([
-            'purchase_order_id' => trim($this->purchase_order_id ?? ''),
-            'product_id'        => trim($this->product_id ?? ''),
-        ]);
+        $merged = [];
+        foreach (['purchase_order_id', 'product_id'] as $field) {
+            if ($this->has($field) && is_string($this->$field)) {
+                $merged[$field] = trim($this->$field);
+            }
+        }
+        if (!empty($merged)) {
+            $this->merge($merged);
+        }
     }
 }

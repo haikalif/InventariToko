@@ -9,7 +9,7 @@ class ModelPurchaseOrdersItems extends Model
 {
 
     use HasCuid;
-    Protected $table = 'purchase_orders_items';
+    protected $table = 'purchase_order_items';
 
     protected $fillable = [
         'purchase_order_id',
@@ -21,6 +21,9 @@ class ModelPurchaseOrdersItems extends Model
     ];
 
     protected $casts = [
+        'jumlah' => 'integer',
+        'jumlah_diterima' => 'integer',
+        'harga_satuan' => 'decimal:2',
         'subtotal' => 'decimal:2',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
@@ -28,12 +31,12 @@ class ModelPurchaseOrdersItems extends Model
 
     public function purchaseOrder()
     {
-        return $this->belongsTo(PurchaseOrder::class);
+        return $this->belongsTo(PurchaseOrder::class, 'purchase_order_id');
     }
 
     public function product()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class, 'product_id');
     }
 
 }

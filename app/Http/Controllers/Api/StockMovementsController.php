@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StockMovementCollection;
+use App\Http\Resources\StockMovementResource;
 use App\Models\ModelStockMovements;
 
 class StockMovementsController extends Controller
@@ -26,10 +27,11 @@ class StockMovementsController extends Controller
      */
     public function show(string $id)
     {
-        $stockMovemnet = ModelStockMovements::findOrFail($id);
-        $this->authorize('view', $stockMovemnet);
+        $stockMovement = ModelStockMovements::findOrFail($id);
+        $this->authorize('view', $stockMovement);
         return response()->json([
-            'message' => 'data yang di pilih berhasil di tampilkan'
+            'message' => 'data yang di pilih berhasil di tampilkan',
+            'data' => new StockMovementResource($stockMovement),
         ]);
     }
 

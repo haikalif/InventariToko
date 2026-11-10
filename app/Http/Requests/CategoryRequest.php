@@ -13,8 +13,7 @@ class CategoryRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Auth::user()?->role === 'admin'
-            || Auth::user()?->role === 'superadmin';
+        return in_array(Auth::user()?->role, ['superadmin', 'admin', 'staff']);
     }
 
     /**
@@ -24,8 +23,10 @@ class CategoryRequest extends FormRequest
      */
     public function rules(): array
     {
+        $required = $this->isMethod('POST') ? 'required' : 'sometimes|required';
+
         return [
-            'nama_kategori' => 'required|string|max:255',
+            'nama_kategori' => $required . '|string|max:255',
             'deskripsi' => 'nullable|string',
         ];
     }
@@ -42,8 +43,10 @@ class CategoryRequest extends FormRequest
 
     public function prepareForValidation(): void
     {
-        $this->merge([
-            'nama_kategori' => trim($this->nama_kategori),
-        ]);
+        if ($this->has('nama_kategori') && is_string($this->nama_kategori)) {
+            $this->merge([
+                'nama_kategori' => trim($this->nama_kategori),
+            ]);
+        }
     }
 }
