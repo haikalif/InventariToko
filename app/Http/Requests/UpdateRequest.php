@@ -38,6 +38,8 @@ class UpdateRequest extends FormRequest
             'email' => 'sometimes|string|email|max:255|unique:users,email,' . $userId,
             'password' => 'sometimes|string|min:8|confirmed',
             'role' => 'sometimes|string|in:admin,kasir,staff',
+            'avatar' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'cover' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
         ];
     }
 }

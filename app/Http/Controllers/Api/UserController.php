@@ -92,12 +92,51 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         $this->authorize('update', $user);
-        $user->update($request->validated());
+
+        $data = $request->validated();
+
+        if ($request->hasFile('avatar')) {
+            $data['avatar'] = $this->handleImageUpload($request, $user, 'avatar', 'avatars', 'role');
+        }
+
+        if ($request->hasFile('cover')) {
+            $data['cover'] = $this->handleImageUpload($request, $user, 'cover', 'covers', 'avatar');
+        }
+
+        $user->update($data);
 
         return response()->json([
             'message' => 'User updated successfully',
             'user' => new \App\Http\Resources\AuthMeResource($user),
         ]);
+    }
+
+    /**
+     * Handle avatar/cover image upload, removing the previous file if present.
+     */
+    private function handleImageUpload(UpdateRequest $request, User $user, string $field, string $folder, string $afterColumn): string
+    {
+        if (!Schema::hasColumn('users', $field)) {
+            Schema::table('users', function (Blueprint $table) use ($field, $afterColumn) {
+                $table->string($field)->nullable()->after($afterColumn);
+            });
+        }
+
+        if ($user->{$field} && file_exists(public_path('storage/' . $user->{$field}))) {
+            @unlink(public_path('storage/' . $user->{$field}));
+        }
+
+        $file = $request->file($field);
+        $filename = $field . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+        $destination = public_path('storage/' . $folder);
+
+        if (!is_dir($destination)) {
+            mkdir($destination, 0755, true);
+        }
+
+        $file->move($destination, $filename);
+
+        return $folder . '/' . $filename;
     }
 
     public function destroy(string $id)

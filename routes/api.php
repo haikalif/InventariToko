@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoriesController;
+use App\Http\Controllers\Api\GlobalSearchController;
 use App\Http\Controllers\Api\ProductsController;
 use App\Http\Controllers\Api\PurchaseOrderController;
 use App\Http\Controllers\Api\PurchaseOrderItemController;
@@ -31,6 +32,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Auth
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    // Global Search
+    Route::get('/search', [GlobalSearchController::class, 'index']);
 
     // Users
     Route::get('/users/trashed', [UserController::class, 'trashed']);

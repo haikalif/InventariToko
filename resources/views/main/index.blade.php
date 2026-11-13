@@ -9,9 +9,11 @@
 </head>
 <body class="bg-canvas flex h-screen overflow-hidden pt-2 pb-2">
 
-    <nav id="sidebar" class="bg-one border-y border-r border-two/80 h-full w-70 shrink-0 flex flex-col justify-between select-none shadow-xl rounded-r-lg transition-all duration-300 ease-in-out overflow-hidden">
+    <div id="sidebarBackdrop" class="fixed inset-0 bg-canvas/75 backdrop-blur-xs z-40 hidden lg:hidden transition-opacity duration-300"></div>
+
+    <nav id="sidebar" class="bg-one border-y border-r border-two/80 h-full w-70 shrink-0 flex flex-col justify-between select-none shadow-xl rounded-r-lg transition-all duration-300 ease-in-out overflow-hidden fixed inset-y-2 left-0 z-50 -translate-x-full lg:static lg:inset-y-auto lg:z-auto lg:translate-x-0">
         <div class="overflow-y-auto w-70">
-            <div id="logo" class="group/logo rounded-tr-lg flex items-center justify-center pt-4 pb-4 bg-two/70 border-b border-two cursor-pointer transition-colors duration-300 hover:bg-two">
+            <div id="logo" class="group/logo rounded-tr-lg flex items-center justify-center pt-4 pb-4 bg-two/70 border-b border-two cursor-pointer transition-colors duration-300 hover:bg-two relative">
                 <h1 class="text-three font-semibold text-2xl transition-transform duration-300 group-hover/logo:-translate-y-0.5">My</h1>
                 <h1 class="text-four font-bold text-2xl transition-transform duration-300 group-hover/logo:-translate-y-0.5">Inventaris</h1>
                 <svg class="ml-1.5 animate-float transition-transform duration-300 group-hover/logo:scale-110 group-hover/logo:rotate-6" width="38" height="38" viewBox="0 0 32 32" fill="none">
@@ -160,88 +162,92 @@
         </div>
     </nav>
 
-    <div class="flex-1 min-w-0 flex flex-col h-full overflow-y-auto pl-2 pr-2 transition-all duration-300 ease-in-out">
-        <nav id="upperNav" class="bg-one border border-two/80 h-18 w-full px-5 flex items-center justify-between rounded-lg shadow-md relative z-30 shrink-0">
+    <div class="flex-1 min-w-0 flex flex-col h-full overflow-y-auto px-2 sm:px-3 transition-all duration-300 ease-in-out">
+        <nav id="upperNav" class="bg-one border border-two/80 min-h-16 md:h-18 w-full px-3 sm:px-5 py-2.5 md:py-0 flex flex-wrap md:flex-nowrap items-center justify-between gap-2.5 md:gap-3 rounded-lg shadow-md relative z-30 shrink-0">
 
-            <!-- BAGIAN KIRI: TOMBOL SIDEBAR & KOLOM PENCARIAN -->
-            <div class="flex items-center gap-3">
+            <!-- 1. BAGIAN KIRI: TOMBOL SIDEBAR & BRAND MOBILE -->
+            <div class="order-1 flex items-center gap-2.5 shrink-0">
                 <!-- Tombol Buka/Tutup Sidebar -->
                 <button id="toggleSidebar"
                         type="button"
                         title="Buka/Tutup Menu Samping"
                         aria-expanded="true"
-                        class="group/btn p-2.5 rounded-lg bg-two/80 border border-four/10 text-four/80 hover:text-four hover:bg-two hover:border-three/60 hover:shadow-md active:scale-90 transition-all duration-200 cursor-pointer shadow-sm">
+                        class="shrink-0 group/btn p-2 sm:p-2.5 rounded-lg bg-two/80 border border-four/10 text-four/80 hover:text-four hover:bg-two hover:border-three/60 hover:shadow-md active:scale-90 transition-all duration-200 cursor-pointer shadow-sm">
                     <svg id="toggleSidebarIcon" class="w-5 h-5 transition-transform duration-300 group-hover/btn:scale-110" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h10M4 18h16" />
                     </svg>
                 </button>
 
-                <!-- 1. KOLOM PENCARIAN + DROPDOWN MENYATU -->
-                <div class="relative w-80 focus-within:w-96 group transition-all duration-300 ease-out">
-                    <!-- Input & Ikon Pencarian (Sudut bawah otomatis rata 'rounded-b-none' saat dropdown muncul) -->
-                    <div class="flex items-center bg-two px-3.5 py-2 rounded-lg group-focus-within:rounded-b-none border border-four/10 group-focus-within:border-three group-focus-within:border-b-one/50 transition-all duration-200 shadow-inner">
-                        <svg class="w-4 h-4 text-three mr-2.5 shrink-0 transition-transform duration-300 group-focus-within:scale-110 group-focus-within:rotate-12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 103.5 10.5a7.5 7.5 0 0013.15 6.15z" />
-                        </svg>
-                        <input id="searchbar"
-                               type="text"
-                               autocomplete="off"
-                               placeholder="Cari produk atau menu..."
-                               class="w-full bg-transparent text-sm text-four placeholder-four/50 focus:outline-none">
-                        <span class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-one/70 text-four/50 border border-four/10 transition-colors duration-200 group-focus-within:border-three/50 group-focus-within:text-three">
-                            Cari
-                        </span>
+                <a href="/" class="md:hidden font-bold text-base tracking-tight select-none">
+                    <span class="text-three">My</span><span class="text-four">Inventaris</span>
+                </a>
+            </div>
+
+            <!-- 2. KOLOM PENCARIAN + DROPDOWN MENYATU (Baris 2 Full-Width di Mobile, Sebelah Kiri di Desktop) -->
+            <div class="order-3 md:order-2 w-full md:w-80 md:focus-within:w-96 relative group transition-all duration-300 ease-out">
+                <!-- Input & Ikon Pencarian (Sudut bawah otomatis rata 'rounded-b-none' saat dropdown muncul) -->
+                <div class="flex items-center bg-two px-3 sm:px-3.5 py-2 rounded-lg group-focus-within:rounded-b-none border border-four/10 group-focus-within:border-three group-focus-within:border-b-one/50 transition-all duration-200 shadow-inner">
+                    <svg class="w-4 h-4 text-three mr-2.5 shrink-0 transition-transform duration-300 group-focus-within:scale-110 group-focus-within:rotate-12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 103.5 10.5a7.5 7.5 0 0013.15 6.15z" />
+                    </svg>
+                    <input id="searchbar"
+                           type="text"
+                           autocomplete="off"
+                           placeholder="Cari produk atau menu..."
+                           class="w-full min-w-0 bg-transparent text-xs sm:text-sm text-four placeholder-four/50 focus:outline-none">
+                    <span class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-one/70 text-four/50 border border-four/10 transition-colors duration-200 group-focus-within:border-three/50 group-focus-within:text-three">
+                        Cari
+                    </span>
+                </div>
+
+                <!-- Dropdown Hasil Pencarian (Menyatu langsung dengan animasi slide & fade) -->
+                <div id="searchDropdown"
+                     class="max-h-[70vh] overflow-y-auto opacity-0 -translate-y-2 scale-y-95 origin-top pointer-events-none group-focus-within:opacity-100 group-focus-within:translate-y-0 group-focus-within:scale-y-100 group-focus-within:pointer-events-auto transition-all duration-200 ease-out absolute left-0 right-0 top-full bg-two border-x border-b border-three rounded-b-lg shadow-2xl z-50">
+                    <div class="px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-four/50 bg-one/35">
+                        Hasil Pencarian Cepat
                     </div>
 
-                    <!-- Dropdown Hasil Pencarian (Menyatu langsung dengan animasi slide & fade) -->
-                    <div id="searchDropdown"
-                         class="opacity-0 -translate-y-2 scale-y-95 origin-top pointer-events-none group-focus-within:opacity-100 group-focus-within:translate-y-0 group-focus-within:scale-y-100 group-focus-within:pointer-events-auto transition-all duration-200 ease-out absolute left-0 right-0 top-full bg-two border-x border-b border-three rounded-b-lg shadow-2xl overflow-hidden z-50">
-                        <div class="px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-four/50 bg-one/35">
-                            Hasil Pencarian Cepat
+                    <!-- Contoh Item Hasil Pencarian (Nanti diisi dinamis pakai JS) -->
+                    <a href="/products" class="group/item flex items-center justify-between px-4 py-2.5 text-sm text-four hover:bg-three hover:pl-5 transition-all duration-200">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-2 h-2 rounded-full bg-three group-hover/item:bg-four group-hover/item:scale-125 transition-all duration-200"></span>
+                            <span>Data Produk</span>
                         </div>
+                        <span class="text-xs px-2 py-0.5 rounded bg-one/50 text-four/70 group-hover/item:bg-one/70 group-hover/item:text-four transition-colors">Master Barang</span>
+                    </a>
 
-                        <!-- Contoh Item Hasil Pencarian (Nanti diisi dinamis pakai JS) -->
-                        <a href="/products" class="group/item flex items-center justify-between px-4 py-2.5 text-sm text-four hover:bg-three hover:pl-5 transition-all duration-200">
-                            <div class="flex items-center gap-2.5">
-                                <span class="w-2 h-2 rounded-full bg-three group-hover/item:bg-four group-hover/item:scale-125 transition-all duration-200"></span>
-                                <span>Data Produk</span>
-                            </div>
-                            <span class="text-xs px-2 py-0.5 rounded bg-one/50 text-four/70 group-hover/item:bg-one/70 group-hover/item:text-four transition-colors">Master Barang</span>
-                        </a>
+                    <a href="/sales/create" class="group/item flex items-center justify-between px-4 py-2.5 text-sm text-four hover:bg-three hover:pl-5 transition-all duration-200">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-2 h-2 rounded-full bg-three group-hover/item:bg-four group-hover/item:scale-125 transition-all duration-200"></span>
+                            <span>Kasir / Transaksi Baru</span>
+                        </div>
+                        <span class="text-xs px-2 py-0.5 rounded bg-one/50 text-four/70 group-hover/item:bg-one/70 group-hover/item:text-four transition-colors">Menu Utama</span>
+                    </a>
 
-                        <a href="/sales/create" class="group/item flex items-center justify-between px-4 py-2.5 text-sm text-four hover:bg-three hover:pl-5 transition-all duration-200">
-                            <div class="flex items-center gap-2.5">
-                                <span class="w-2 h-2 rounded-full bg-three group-hover/item:bg-four group-hover/item:scale-125 transition-all duration-200"></span>
-                                <span>Kasir / Transaksi Baru</span>
-                            </div>
-                            <span class="text-xs px-2 py-0.5 rounded bg-one/50 text-four/70 group-hover/item:bg-one/70 group-hover/item:text-four transition-colors">Menu Utama</span>
-                        </a>
+                    <a href="/stock-movements" class="group/item flex items-center justify-between px-4 py-2.5 text-sm text-four hover:bg-three hover:pl-5 transition-all duration-200">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-2 h-2 rounded-full bg-three group-hover/item:bg-four group-hover/item:scale-125 transition-all duration-200"></span>
+                            <span>Mutasi / Riwayat Stok</span>
+                        </div>
+                        <span class="text-xs px-2 py-0.5 rounded bg-one/50 text-four/70 group-hover/item:bg-one/70 group-hover/item:text-four transition-colors">Inventaris</span>
+                    </a>
 
-                        <a href="/stock-movements" class="group/item flex items-center justify-between px-4 py-2.5 text-sm text-four hover:bg-three hover:pl-5 transition-all duration-200">
-                            <div class="flex items-center gap-2.5">
-                                <span class="w-2 h-2 rounded-full bg-three group-hover/item:bg-four group-hover/item:scale-125 transition-all duration-200"></span>
-                                <span>Mutasi / Riwayat Stok</span>
-                            </div>
-                            <span class="text-xs px-2 py-0.5 rounded bg-one/50 text-four/70 group-hover/item:bg-one/70 group-hover/item:text-four transition-colors">Inventaris</span>
-                        </a>
-
-                        <a href="/users" data-roles="superadmin,admin" class="{{ $isAdminOrSuper ? '' : 'hidden' }} group/item flex items-center justify-between px-4 py-2.5 text-sm text-four hover:bg-three hover:pl-5 transition-all duration-200">
-                            <div class="flex items-center gap-2.5">
-                                <span class="w-2 h-2 rounded-full bg-three group-hover/item:bg-four group-hover/item:scale-125 transition-all duration-200"></span>
-                                <span>Kelola Karyawan & Role</span>
-                            </div>
-                            <span class="text-xs px-2 py-0.5 rounded bg-one/50 text-four/70 group-hover/item:bg-one/70 group-hover/item:text-four transition-colors">Administrasi</span>
-                        </a>
-                    </div>
+                    <a href="/users" data-roles="superadmin,admin" class="{{ $isAdminOrSuper ? '' : 'hidden' }} group/item flex items-center justify-between px-4 py-2.5 text-sm text-four hover:bg-three hover:pl-5 transition-all duration-200">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-2 h-2 rounded-full bg-three group-hover/item:bg-four group-hover/item:scale-125 transition-all duration-200"></span>
+                            <span>Kelola Karyawan & Role</span>
+                        </div>
+                        <span class="text-xs px-2 py-0.5 rounded bg-one/50 text-four/70 group-hover/item:bg-one/70 group-hover/item:text-four transition-colors">Administrasi</span>
+                    </a>
                 </div>
             </div>
 
-            <!-- 2. BAGIAN KANAN: PROFIL PENGGUNA / AUTENTIKASI -->
-            <div class="flex items-center gap-3">
+            <!-- 3. BAGIAN KANAN: PROFIL PENGGUNA / AUTENTIKASI -->
+            <div class="order-2 md:order-3 ml-auto flex items-center gap-2 sm:gap-3 shrink-0">
                 <!-- Tampilan Jika Sudah Login (via Session atau Sanctum Token) -->
-                <div id="navAuthProfile" class="{{ auth()->check() ? '' : 'hidden' }} flex items-center gap-2.5">
+                <div id="navAuthProfile" class="{{ auth()->check() ? '' : 'hidden' }} flex items-center gap-2 sm:gap-2.5">
                     <!-- Kotak Dropdown Info Akun (Terpisah dari Foto) -->
-                    <details id="navAuthDropdown" class="relative w-48 group sidebar-accordion">
+                    <details id="navAuthDropdown" class="relative w-36 sm:w-48 group sidebar-accordion">
                         <summary class="flex items-center justify-between gap-2.5 cursor-pointer list-none px-3.5 py-1.5 rounded-lg bg-two border border-four/10 hover:border-three/70 group-open:rounded-b-none group-open:border-three group-open:border-b-one/50 transition-all duration-200 select-none shadow-inner">
                             <div class="min-w-0 text-left">
                                 <p id="navUserName" class="text-xs font-semibold text-four truncate leading-snug">
@@ -312,9 +318,9 @@
                 </div>
 
                 <!-- Tampilan Jika Belum Masuk -->
-                <div id="navGuestActions" class="{{ auth()->check() ? 'hidden' : '' }} flex items-center gap-2.5 text-sm">
+                <div id="navGuestActions" class="{{ auth()->check() ? 'hidden' : '' }} flex items-center gap-1.5 sm:gap-2.5 text-xs sm:text-sm">
                     <a href="/login"
-                       class="group/login flex items-center gap-2 px-4 py-2 rounded-lg bg-two/80 border border-four/15 text-four hover:bg-two hover:border-three/70 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 active:scale-95 transition-all duration-200 font-medium shadow-sm">
+                       class="group/login flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-two/80 border border-four/15 text-four hover:bg-two hover:border-three/70 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 active:scale-95 transition-all duration-200 font-medium shadow-sm">
                         <svg class="w-4 h-4 text-three transition-transform duration-200 group-hover/login:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
                         </svg>
@@ -322,7 +328,7 @@
                     </a>
 
                     <a href="/register"
-                       class="group/reg flex items-center gap-2 px-4 py-2 rounded-lg bg-three border border-four/20 text-four hover:brightness-110 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-95 transition-all duration-200 font-semibold shadow-md">
+                       class="group/reg flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-three border border-four/20 text-four hover:brightness-110 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-95 transition-all duration-200 font-semibold shadow-md">
                         <svg class="w-4 h-4 transition-transform duration-200 group-hover/reg:scale-110" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                         </svg>
@@ -333,7 +339,7 @@
 
         </nav>
 
-        <main class="flex-1 bg-one border border-two/80 mt-2 rounded-lg p-6 overflow-y-auto text-four shadow-md animate-fade-in">
+        <main class="flex-1 bg-one border border-two/80 mt-2 rounded-lg p-3 sm:p-5 lg:p-6 overflow-y-auto text-four shadow-md animate-fade-in">
             @yield('content')
         </main>
     </div>
@@ -383,14 +389,39 @@
     </div>
 
     <script>
-        // 1. Animasi Buka/Tutup Sidebar & Ikon Hamburger
+        // 1. Animasi Buka/Tutup Sidebar Responsif (Drawer di Mobile/Tablet, Collapsible di Desktop)
         const sidebar = document.getElementById('sidebar');
+        const sidebarBackdrop = document.getElementById('sidebarBackdrop');
         const toggleSidebarBtn = document.getElementById('toggleSidebar');
         const toggleSidebarIcon = document.getElementById('toggleSidebarIcon');
+        const isMobileViewport = () => window.innerWidth < 1024;
+
+        function openMobileSidebar() {
+            sidebar.classList.remove('-translate-x-full', 'w-0', 'border-r-0', 'border-y-0', 'opacity-0');
+            sidebar.classList.add('translate-x-0', 'w-70', 'border-y', 'border-r');
+            sidebarBackdrop?.classList.remove('hidden');
+            toggleSidebarBtn.setAttribute('aria-expanded', 'true');
+        }
+
+        function closeMobileSidebar() {
+            sidebar.classList.add('-translate-x-full');
+            sidebar.classList.remove('translate-x-0');
+            sidebarBackdrop?.classList.add('hidden');
+            toggleSidebarBtn.setAttribute('aria-expanded', 'false');
+        }
 
         toggleSidebarBtn.addEventListener('click', () => {
-            const isClosed = sidebar.classList.contains('w-0');
+            if (isMobileViewport()) {
+                const isDrawerOpen = sidebar.classList.contains('translate-x-0');
+                if (isDrawerOpen) {
+                    closeMobileSidebar();
+                } else {
+                    openMobileSidebar();
+                }
+                return;
+            }
 
+            const isClosed = sidebar.classList.contains('w-0');
             if (isClosed) {
                 sidebar.classList.remove('w-0', 'border-r-0', 'border-y-0', 'opacity-0');
                 sidebar.classList.add('w-70', 'border-y', 'border-r');
@@ -401,6 +432,24 @@
                 sidebar.classList.add('w-0', 'border-r-0', 'border-y-0', 'opacity-0');
                 toggleSidebarIcon.classList.add('rotate-180');
                 toggleSidebarBtn.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        sidebarBackdrop?.addEventListener('click', closeMobileSidebar);
+
+        // Tutup drawer otomatis saat link menu diklik di mode mobile
+        sidebar?.querySelectorAll('a').forEach((link) => {
+            link.addEventListener('click', () => {
+                if (isMobileViewport()) {
+                    closeMobileSidebar();
+                }
+            });
+        });
+
+        window.addEventListener('resize', () => {
+            if (!isMobileViewport()) {
+                sidebarBackdrop?.classList.add('hidden');
+                sidebar.classList.remove('-translate-x-full', 'translate-x-0');
             }
         });
 
@@ -488,8 +537,34 @@
         });
 
         window.SERVER_USER = @json(auth()->user());
+
+        // 4. Auto-inject data-label pada setiap cell tabel agar tampil sebagai card compact di mobile
+        function applyTableMobileLabels(table) {
+            const headers = Array.from(table.querySelectorAll('thead th')).map((th) => th.textContent.trim());
+            if (!headers.length) return;
+
+            table.querySelectorAll('tbody tr').forEach((row) => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length === 1 && cells[0].hasAttribute('colspan')) return;
+                cells.forEach((td, idx) => {
+                    if (headers[idx] && !td.hasAttribute('data-label')) {
+                        td.setAttribute('data-label', headers[idx]);
+                    }
+                });
+            });
+        }
+
+        const mainContainer = document.querySelector('main');
+        if (mainContainer) {
+            mainContainer.querySelectorAll('table').forEach(applyTableMobileLabels);
+            const tableObserver = new MutationObserver(() => {
+                mainContainer.querySelectorAll('table').forEach(applyTableMobileLabels);
+            });
+            tableObserver.observe(mainContainer, { childList: true, subtree: true });
+        }
     </script>
     <script src="{{ asset('js/api.js') }}"></script>
+    <script src="{{ asset('js/globalSearch.js') }}"></script>
     @stack('scripts')
 </body>
 </html>
