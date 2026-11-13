@@ -10,10 +10,11 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->string('id', 25)->primary(); // CUID2
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('role')->default('staff'); // admin, staff, kasir
+            $table->string('role')->default('kasir'); // superadmin, admin, staff, kasir (default role terendah)
+            $table->string('avatar')->nullable();
             $table->rememberToken();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();

@@ -21,7 +21,7 @@ class PurchaseOrderItemCollection extends ResourceCollection
         ];
     }
 
-    public function with(Request $request): array
+    public function paginationInformation(Request $request, array $paginated, array $default): array
     {
         return [
             'meta' => [

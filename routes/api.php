@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 Route::post('/register', [UserController::class, 'store']);
+Route::post('/register/check', [UserController::class, 'checkAvailability']);
 Route::post('/login', [AuthController::class, 'login']);
 
 /*

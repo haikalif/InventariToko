@@ -19,6 +19,8 @@ class AuthMeResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'role' => $this->role,
+            'avatar' => $this->avatar,
+            'avatar_url' => $this->avatar ? asset('storage/' . $this->avatar) : asset('image/blankFoto.png'),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

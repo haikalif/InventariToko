@@ -6,10 +6,29 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\registerRequest;
 use App\Http\Requests\UpdateRequest;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
 
 
 class UserController extends Controller
 {
+    /**
+     * Cek ketersediaan nama & email secara real-time saat registrasi
+     */
+    public function checkAvailability(Request $request)
+    {
+        $name = $request->input('name') ? preg_replace('/\s+/', ' ', trim($request->input('name'))) : null;
+        $email = $request->input('email') ? strtolower(trim($request->input('email'))) : null;
+
+        $nameExists = $name ? User::where('name', $name)->exists() : false;
+        $emailExists = $email ? User::where('email', $email)->exists() : false;
+
+        return response()->json([
+            'name_taken'  => $nameExists,
+            'email_taken' => $emailExists,
+        ]);
+    }
     /**
      * Display a listing of the resource.
      */
@@ -24,10 +43,36 @@ class UserController extends Controller
 
     public function store(registerRequest $request)
     {
-        $user = User::create($request->validated());
+        $data = $request->only(['name', 'email', 'password']);
+
+        // Paksa ke role terendah ('kasir') saat registrasi mandiri
+        $data['role'] = 'kasir';
+
+        if ($request->hasFile('avatar')) {
+            if (!Schema::hasColumn('users', 'avatar')) {
+                Schema::table('users', function (Blueprint $table) {
+                    $table->string('avatar')->nullable()->after('role');
+                });
+            }
+
+            $file = $request->file('avatar');
+            $filename = 'avatar_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $destination = public_path('storage/avatars');
+
+            if (!is_dir($destination)) {
+                mkdir($destination, 0755, true);
+            }
+
+            $file->move($destination, $filename);
+            $data['avatar'] = 'avatars/' . $filename;
+        }
+
+        $user = User::create($data);
+        $token = $user->createToken('auth_token', ['*'], now()->addWeeks(1))->plainTextToken;
 
         return response()->json([
-            'message' => 'User registered successfully',
+            'message' => 'Pendaftaran akun berhasil.',
+            'access_token' => $token,
             'user' => new \App\Http\Resources\AuthMeResource($user),
         ], 201);
     }
