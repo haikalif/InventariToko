@@ -2,13 +2,46 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     @vite('resources/css/app.css')
     <title>@yield('title', 'Beranda') | MyInventaris</title>
+    <style>
+        .app-shell-body {
+            height: 100vh;
+            height: 100dvh;
+            padding-top: max(0.5rem, env(safe-area-inset-top));
+            padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+        }
+        @media (max-width: 1023px) {
+            #sidebar {
+                height: auto;
+                top: max(0.5rem, env(safe-area-inset-top));
+                bottom: max(0.5rem, env(safe-area-inset-bottom));
+            }
+            #navbutton {
+                padding-bottom: max(1.25rem, calc(1rem + env(safe-area-inset-bottom)));
+            }
+        }
+        @media (max-width: 767px) {
+            main {
+                padding-bottom: max(2.25rem, calc(1.5rem + env(safe-area-inset-bottom)));
+            }
+        }
+        [id$="Modal"] {
+            padding-top: max(1rem, env(safe-area-inset-top));
+            padding-bottom: max(1rem, env(safe-area-inset-bottom));
+        }
+        [id$="Modal"] > div.overflow-y-auto {
+            max-height: calc(100dvh - 2rem - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+        }
+        #toastContainer {
+            bottom: max(1.25rem, calc(1.25rem + env(safe-area-inset-bottom)));
+        }
+    </style>
 </head>
-<body class="bg-canvas flex h-screen overflow-hidden pt-2 pb-2">
+<body class="bg-canvas app-shell-body flex h-dvh overflow-hidden pt-2 pb-2">
 
     <div id="sidebarBackdrop" class="fixed inset-0 bg-canvas/75 backdrop-blur-xs z-40 hidden lg:hidden transition-opacity duration-300"></div>
 

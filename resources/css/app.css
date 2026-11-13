@@ -134,3 +134,49 @@ input[type="number"] {
         display: none;
     }
 }
+
+/* Mobile Safe-Area & Dynamic Viewport Height (agar tombol tidak ketutupan nav bar HP) */
+.app-shell-body {
+    height: 100vh;
+    height: 100dvh;
+    padding-top: max(0.5rem, env(safe-area-inset-top));
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+}
+
+.auth-shell-body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding-top: max(1rem, env(safe-area-inset-top));
+    padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+}
+
+@media (max-width: 1023px) {
+    #sidebar {
+        height: auto;
+        top: max(0.5rem, env(safe-area-inset-top));
+        bottom: max(0.5rem, env(safe-area-inset-bottom));
+    }
+
+    #navbutton {
+        padding-bottom: max(1.25rem, calc(1rem + env(safe-area-inset-bottom)));
+    }
+}
+
+@media (max-width: 767px) {
+    main {
+        padding-bottom: max(2.25rem, calc(1.5rem + env(safe-area-inset-bottom)));
+    }
+}
+
+[id$="Modal"] {
+    padding-top: max(1rem, env(safe-area-inset-top));
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+[id$="Modal"] > div.overflow-y-auto {
+    max-height: calc(100dvh - 2rem - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+}
+
+#toastContainer {
+    bottom: max(1.25rem, calc(1.25rem + env(safe-area-inset-bottom)));
+}

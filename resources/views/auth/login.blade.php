@@ -2,13 +2,21 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     @vite('resources/css/app.css')
     <title>Masuk | MyInventaris</title>
+    <style>
+        .auth-shell-body {
+            min-height: 100vh;
+            min-height: 100dvh;
+            padding-top: max(1rem, env(safe-area-inset-top));
+            padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+        }
+    </style>
 </head>
-<body class="bg-canvas min-h-screen flex flex-col items-center justify-center p-4 text-four select-none">
+<body class="bg-canvas auth-shell-body min-h-dvh flex flex-col items-center justify-center p-4 text-four select-none">
 
     <!-- Bar Atas: Brand Logo & Navigasi Kembali -->
     <div class="w-full max-w-md mb-3 flex items-center justify-between animate-fade-in">
